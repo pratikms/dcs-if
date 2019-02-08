@@ -1,0 +1,4 @@
+Django==2.1.5
+django-sb-admin==0.3.7
+pkg-resources==0.0.0
+pytz==2018.9
