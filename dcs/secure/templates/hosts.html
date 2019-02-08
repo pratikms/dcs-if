@@ -50,28 +50,30 @@
 <script type="text/javascript">
 
     function perform(action, name) {
-        output = '';
-        $.ajax({
-            url: '../perform/' + action + '/' + name,
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                // console.log(data);
-                var output = '<table>';
-                $.each(data, function (k, v) {
-                    // console.log(k + ': ' + v)
-                    output += '<tr>';
-                    output += '<td>' + k + '</td>';
-                    output += '<td>' + v + '</td>';
-                    output += '</tr>';
-                })
-                output += '</table>'
-                // console.log(output);
-                // return output;
-            }
-        });
-        return output;
-        // return 'yo yo'
+        var div = $('<div/>')
+            .addClass( 'loading' )
+            .text( 'Loading...' );
+        setTimeout(function () {
+            output = '';
+            $.ajax({
+                url: '../perform/' + action + '/' + name,
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    // console.log(data);
+                    var output = '<table>';
+                    $.each(data, function (k, v) {
+                        output += '<tr>';
+                        output += '<td>' + k + '</td>';
+                        output += '<td>' + v + '</td>';
+                        output += '</tr>';
+                    })
+                    output += '</table>'
+                    div.html(output).removeClass('loading');
+                }
+            });
+        }, 1500);
+        return div;
     }
 
     $(document).ready(function() {
@@ -92,8 +94,6 @@
             }
             else {
                 // Open this row
-                op = perform(action, name)
-                console.log(op)
                 row.child( perform(action, name) ).show();
                 tr.addClass('shown');
             }
