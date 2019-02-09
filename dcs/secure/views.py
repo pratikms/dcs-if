@@ -37,7 +37,7 @@ def get_output(command):
     logger.error("Running command : " + command)
     proc = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output = proc.stdout.read()
-    error = proc.stderr.read()
+    # error = proc.stderr.read()
     if output:
         logger.error (output)
         return str(output.decode('utf-8').rstrip())

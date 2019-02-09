@@ -1,4 +1,9 @@
-{% extends "base.html" %}{% load static %}{% block sb_admin_title %}Compliance Check{% endblock sb_admin_title %}
+{% extends "base.html" %}{% load static %}
+{% block sb_admin_custom_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+{% endblock sb_admin_custom_css %}
+{% block sb_admin_title %}Compliance Check{% endblock sb_admin_title %}
 {% block sb_admin_subheading %}<small></small>{% endblock sb_admin_subheading %}
 {% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Compliance Check Details</a>{% endblock sb_admin_breadcrumb %}
 {% block sb_admin_breadcrumb_active %}{% endblock sb_admin_breadcrumb_active %}
@@ -54,12 +59,13 @@
 			</div>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped">
+                    <table class="table table-bordered table-hover table-striped display nowrap">
                         <thead>
                             <tr>
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Remediation</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,10 +76,11 @@
 								</td>
 								<td>
 									{{ elmnt.status }}
-								</td>
+                                </td>
 								<td>
 									{{ elmnt.Remediation }}
 								</td>
+                                <td></td>
 							</tr>
 							{% endfor %}
 							
@@ -92,16 +99,35 @@
 <!-- /.row -->
 {% endblock sb_admin_content %}
 {% block sb_admin_custom_js %}
-    <!-- Morris Charts JavaScript -->
-    <script src="{% static "js/plugins/morris/raphael.min.js" %}"></script>
-    <script src="{% static "js/plugins/morris/morris.min.js" %}"></script>
-    <script src="{% static "js/plugins/morris/morris-data.js" %}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src=" https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js "></script>
+<script>
 
-    <!-- Flot Charts JavaScript -->
-    <!--[if lte IE 8]><script src="js/excanvas.min.js"></script><![endif]-->
-    <script src="{% static "js/plugins/flot/jquery.flot.js" %}"></script>
-    <script src="{% static "js/plugins/flot/jquery.flot.tooltip.min.js" %}"></script>
-    <script src="{% static "js/plugins/flot/jquery.flot.resize.js" %}"></script>
-    <script src="{% static "js/plugins/flot/jquery.flot.pie.js" %}"></script>
-    <script src="{% static "js/plugins/flot/flot-data.js" %}"></script>
+    $(document).ready(function () {
+        $('table').DataTable({
+            responsive: {
+                details: {
+                    type: 'column',
+                    target: -1
+                }
+            },
+            columnDefs: [ {
+                className: 'control',
+                orderable: false,
+                targets:   -1
+            } ],
+            columns: [
+                null,
+                null,
+                {
+                    'render': function (data, type, row) {
+                        return data.split('\n').join('<br />')
+                    }
+                },
+                null
+            ]
+        });
+    });
+
+</script>
 {% endblock sb_admin_custom_js %}

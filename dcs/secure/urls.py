@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'^$', views.dashboard, name='dashboard'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^images/$', views.images, name='hosts'),
-    url(r'^comcheck/$', views.compcheck, name='hosts'),
+    url(r'^compcheck/$', views.compcheck, name='hosts'),
     path('perform/<action>/<name>', views.perform),
     url(r'^images/$', views.images, name='images'),
     path('perform/<action>/<name>', views.perform),

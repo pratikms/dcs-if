@@ -17,7 +17,7 @@ groups:
           value: "/var/lib/docker"
         set: true
     remediation: "For new installations, create a separate partition for /var/lib/docker
-    mount point. For systems that were previously installed, use the Logical Volume Manager
+    mount point.\nFor systems that were previously installed, use the Logical Volume Manager
     (LVM) to create partitions."
     scored: true
 
@@ -27,9 +27,9 @@ groups:
     remediation: "You may consider various CIS Security Benchmarks for your container host.
     If you have other security guidelines or regulatory requirements to adhere to, please 
     follow them as suitable in your environment.
-    Additionally, you can run a kernel with grsecurity and PaX . This would add many safety
-    checks, both at compile-time and run-time. It is also designed to defeat many exploits and
-    has powerful security features. These features do not require Docker-specific
+    Additionally, you can run a kernel with grsecurity and PaX .\nThis would add many safety
+    checks, both at compile-time and run-time.\nIt is also designed to defeat many exploits and
+    has powerful security features.\nThese features do not require Docker-specific
     configuration, since those security features apply system-wide, independent of containers."
     scored: false
 
@@ -44,7 +44,7 @@ groups:
     description: "Ensure only trusted users are allowed to control Docker daemon (Scored)"
     audit: "getent group docker"
     type: manual
-    remediation: "Remove any users from the docker group that are not trusted. Additionally,
+    remediation: "Remove any users from the docker group that are not trusted.\nAdditionally,
     do not create a mapping of sensitive directories on host to container volumes."
     scored: true
 
@@ -62,7 +62,7 @@ groups:
         For example,
         Add the line as below line in /etc/audit/audit.rules file:\n
         -w /usr/bin/docker -k docker\n
-        Then, restart the audit daemon. For example,\n
+        Then, restart the audit daemon.\nFor example,\n
         service auditd restart"
     scored: true
 
@@ -81,7 +81,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /var/lib/docker -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -100,7 +100,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /etc/docker -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -120,7 +120,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /usr/lib/systemd/system/docker.service -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -140,7 +140,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /usr/lib/systemd/system/docker.socket -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -159,7 +159,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /etc/default/docker -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -178,7 +178,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /etc/docker/daemon.json -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -197,7 +197,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /usr/bin/docker-containerd -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -216,7 +216,7 @@ groups:
     For example,
     Add the line as below in /etc/audit/audit.rules file:\n
     -w /usr/bin/docker-runc -k docker\n
-    Then, restart the audit daemon. For example,\n
+    Then, restart the audit daemon.\nFor example,\n
     service auditd restart"
     scored: true
 
@@ -238,7 +238,7 @@ groups:
       For Example,
       dockerd --icc=false
       Alternatively, you can follow the Docker documentation and create a custom network and
-      only join containers that need to communicate to that custom network. The --icc
+      only join containers that need to communicate to that custom network.\nThe --icc
       parameter only applies to the default docker bridge, if custom networks are used then the
       approach of segmenting networks should be adopted instead.
     scored: true
@@ -274,7 +274,7 @@ groups:
           value: true
         set: true
     remediation: |
-      Do not run the Docker daemon with --iptables=false parameter. For example, do not
+      Do not run the Docker daemon with --iptables=false parameter.\nFor example, do not
       start the Docker daemon as below:
       dockerd --iptables=false
     scored: true
@@ -351,15 +351,15 @@ groups:
           value: "userns"
         set: true
     remediation: |
-      Please consult Docker documentation for various ways in which this can be configured
-      depending upon your requirements. Your steps might also vary based on platform - For
+      "Please consult Docker documentation for various ways in which this can be configured
+      depending upon your requirements.\nYour steps might also vary based on platform - For
       example, on Red Hat, sub-UIDs and sub-GIDs mapping creation does not work
-      automatically. You might have to create your own mapping.
+      automatically.\nYou might have to create your own mapping.
       However, the high-level steps are as below:
       Step 1: Ensure that the files /etc/subuid and /etc/subgid exist.
       touch /etc/subuid /etc/subgid
       Step 2: Start the docker daemon with --userns-remap flag
-      dockerd --userns-remap=default
+      dockerd --userns-remap=default"
     scored: true
 
   - id: 2.9
@@ -376,7 +376,7 @@ groups:
           value: "/docker"
         set: true
     remediation: |
-      The default setting is good enough and can be left as-is. If you want to specifically set a non-
+      The default setting is good enough and can be left as-is.\nIf you want to specifically set a non-
       default cgroup, pass --cgroup-parent parameter to the docker daemon when starting it.
       For Example,
       dockerd --cgroup-parent=/foobar
@@ -517,8 +517,8 @@ groups:
           value: "default"
         set: true
     remediation: |
-      By default, Docker's default seccomp profile is applied. If this is good for your environment,
-      no action is necessary. Alternatively, if you choose to apply your own seccomp profile, use
+      By default, Docker's default seccomp profile is applied.\nIf this is good for your environment,
+      no action is necessary.\nAlternatively, if you choose to apply your own seccomp profile, use
       the --seccomp-profile flag at daemon start or put it in the daemon runtime parameters
       file.
       dockerd --seccomp-profile </path/to/seccomp/profile>
@@ -554,7 +554,7 @@ groups:
     remediation: |
       Step 1: Find out the file location:
       systemctl show -p FragmentPath docker.service
-      Step 2: If the file does not exist, this recommendation is not applicable. If the file exists,
+      Step 2: If the file does not exist, this recommendation is not applicable.\nIf the file exists,
       execute the below command with the correct file path to set the ownership and group
       ownership for the file to root .
       For example,
@@ -575,7 +575,7 @@ groups:
     remediation: |
       Step 1: Find out the file location:
       systemctl show -p FragmentPath docker.service
-      Step 2: If the file does not exist, this recommendation is not applicable. If the file exists,
+      Step 2: If the file does not exist, this recommendation is not applicable.\nIf the file exists,
       execute the below command with the correct file path to set the file permissions to 644 .
       For example,
       chmod 644 /usr/lib/systemd/system/docker.service
@@ -594,7 +594,7 @@ groups:
     remediation: |
       Step 1: Find out the file location:
       systemctl show -p FragmentPath docker.socket
-      Step 2: If the file does not exist, this recommendation is not applicable. If the file exists,
+      Step 2: If the file does not exist, this recommendation is not applicable.\nIf the file exists,
       execute the below command with the correct file path to set the ownership and group
       ownership for the file to root .
       For example,
@@ -615,7 +615,7 @@ groups:
     remediation: |
       Step 1: Find out the file location:
       systemctl show -p FragmentPath docker.socket
-      Step 2: If the file does not exist, this recommendation is not applicable. If the file exists,
+      Step 2: If the file does not exist, this recommendation is not applicable.\nIf the file exists,
       execute the below command with the correct file path to set the file permissions to 644 .
       For example,
       chmod 644 /usr/lib/systemd/system/docker.socket
@@ -893,14 +893,14 @@ groups:
     remediation: |
        Ensure that the Dockerfile for the container image contains below instruction:
        USER <username or ID>
-       where username or ID refers to the user that could be found in the container base image. If
+       where username or ID refers to the user that could be found in the container base image.\nIf
        there is no specific user created in the container base image, then add a useradd command
        to add the specific user before USER instruction.
        For example, add the below lines in the Dockerfile to create a user in the container:
        RUN useradd -d /home/username -m -s /bin/bash username
        USER username
        Note: If there are users in the image that the containers do not need, consider deleting
-       them. After deleting those users, commit the image and then generate new instances of
+       them.\nAfter deleting those users, commit the image and then generate new instances of
        containers for use.
     scored: true
 
@@ -918,12 +918,12 @@ groups:
     description: "Ensure unnecessary packages are not installed in the container (Not Scored)"
     type: manual
     remediation: |
-      At the outset, do not install anything on the container that does not justify the purpose. If
+      At the outset, do not install anything on the container that does not justify the purpose.\nIf
       the image had some packages that your container does not use, uninstall them.
       Consider using a minimal base image rather than the standard Redhat/Centos/Debian
-      images if you can. Some of the options include BusyBox and Alpine.
+      images if you can.\nSome of the options include BusyBox and Alpine.
       Not only does this trim your image size from >150Mb to ~20 Mb, there are also fewer tools
-      and paths to escalate privileges. You can even remove the package installer as a final
+      and paths to escalate privileges.\nYou can even remove the package installer as a final
       hardening measure for leaf/production containers.
     scored: false
 
@@ -977,7 +977,7 @@ groups:
     type: manual
     remediation: |
       Use update instructions along with install instructions (or any other) and version pinning
-      for packages while installing them. This would bust the cache and force to extract the
+      for packages while installing them.\nThis would bust the cache and force to extract the
       required versions.
       Alternatively, you could use --no-cache flag during docker build process to avoid using
       cached layers.
@@ -988,7 +988,7 @@ groups:
     (Not Scored)"
     type: manual
     remediation: |
-      Allow setuid and setgid permissions only on executables which need them. You could
+      Allow setuid and setgid permissions only on executables which need them.\nYou could
       remove these permissions during build time by adding the following command in your
       Dockerfile, preferably towards the end of the Dockerfile:
       RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
@@ -1022,12 +1022,12 @@ groups:
     description: "Ensure AppArmor Profile is Enabled (Scored)"
     type: manual
     remediation: |
-      If AppArmor is applicable for your Linux OS, use it. You may have to follow below set of
+      If AppArmor is applicable for your Linux OS, use it.\nYou may have to follow below set of
       steps:
-            1. Verify if AppArmor is installed. If not, install it.
+            1. Verify if AppArmor is installed.\nIf not, install it.
             2. Create or import a AppArmor profile for Docker containers.
             3. Put this profile in enforcing mode.
-            4. Start your Docker container using the customized AppArmor profile. For example,
+            4. Start your Docker container using the customized AppArmor profile.\nFor example,
       docker run --interactive --tty --security-opt="apparmor:PROFILENAME" centos
       /bin/bash
     scored: true
@@ -1036,13 +1036,13 @@ groups:
     description: "Ensure SELinux security options are set, if applicable (Scored)"
     type: manual
     remediation: |
-      If SELinux is applicable for your Linux OS, use it. You may have to follow below set of steps:
+      If SELinux is applicable for your Linux OS, use it.\nYou may have to follow below set of steps:
               1. Set the SELinux State.
               2. Set the SELinux Policy.
               3. Create or import a SELinux policy template for Docker containers.
-              4. Start Docker in daemon mode with SELinux enabled. For example,
+              4. Start Docker in daemon mode with SELinux enabled.\nFor example,
         docker daemon --selinux-enabled
-              5. Start your Docker container using the security options. For example,
+              5. Start your Docker container using the security options.\nFor example,
         docker run --interactive --tty --security-opt label=level:TopSecret centos
         /bin/bash
     scored: true
@@ -1113,7 +1113,7 @@ groups:
     description: "Ensure privileged ports are not mapped within containers (Scored)"
     type: manual
     remediation: |
-      Do not map the container ports to privileged host ports when starting a container. Also,
+      Do not map the container ports to privileged host ports when starting a container.\nAlso,
       ensure that there is no such container to host privileged port mapping declarations in the
       Dockerfile.
     scored: true
@@ -1123,9 +1123,9 @@ groups:
     type: manual
     remediation: |
       Fix the Dockerfile of the container image to expose only needed ports by your
-      containerized application. You can also completely ignore the list of ports defined in the
+      containerized application.\nYou can also completely ignore the list of ports defined in the
       Dockerfile by NOT using -P (UPPERCASE) or --publish-all flag when starting the
-      container. Use the -p (lowercase) or --publish flag to explicitly define the ports that you
+      container.\nUse the -p (lowercase) or --publish flag to explicitly define the ports that you
       need for a particular container instance.
       For example,
       docker run --interactive --tty --publish 5000 --publish 5001 --publish 5002
@@ -1154,7 +1154,7 @@ groups:
           value: 0
         set: true
     remediation: |
-      Run the container with only as much memory as required. Always run the container using
+      Run the container with only as much memory as required.\nAlways run the container using
       the --memory argument.
       For example, you could run a container as below:
       docker run --interactive --tty --memory 256m centos /bin/bash
@@ -1164,7 +1164,7 @@ groups:
       docker inspect --format='{{.Config.Memory}}' 7c5a2d4c7fe0
 
       For example, if the memory limit is set to 256 MB for the above container instance, the
-      output of the above command would be 2.68435456e+08 and NOT 256m. You should
+      output of the above command would be 2.68435456e+08 and NOT 256m.\nYou should
       convert this value using a scientific calculator or programmatic methods.
     scored: true
 
@@ -1184,14 +1184,14 @@ groups:
           value: 1024
         set: true
     remediation: |
-      Manage the CPU shares between your containers. To do so start the container using the --
+      Manage the CPU shares between your containers.\nTo do so start the container using the --
       cpu-shares argument.
       For example, you could run a container as below:
       docker run --interactive --tty --cpu-shares 512 centos /bin/bash
       In the above example, the container is started with CPU shares of 50% of what the other
-      containers use. So, if the other container has CPU shares of 80%, this container will have
+      containers use.\nSo, if the other container has CPU shares of 80%, this container will have
       CPU shares of 40%.
-      Note: Every new container will have 1024 shares of CPU by default. However, this value is
+      Note: Every new container will have 1024 shares of CPU by default.\nHowever, this value is
       shown as 0 if you run the command mentioned in the audit section.
     scored: true
 
@@ -1226,7 +1226,7 @@ groups:
       docker run --interactive --tty --read-only -v my-named-volume:/run/app/data
       centos /bin/bash
       3. Transmitting container data outside of the docker during the container's runtime
-      for container data to persist container data. Examples include hosted databases,
+      for container data to persist container data.\nExamples include hosted databases,
       network file shares, and APIs.
     scored: true
 
@@ -1277,7 +1277,7 @@ groups:
       - flag: "IpcMode=host"
         set: false
     remediation: |
-      Do not start a container with --ipc=host argument. For example, do not start a container
+      Do not start a container with --ipc=host argument.\nFor example, do not start a container
       as below:
       docker run --interactive --tty --ipc=host centos /bin/bash
     scored: true
@@ -1287,7 +1287,7 @@ groups:
     Scored)"
     type: manual
     remediation: |
-      Do not directly expose the host devices to containers. If at all, you need to expose the host
+      Do not directly expose the host devices to containers.\nIf at all, you need to expose the host
       devices to containers, use the correct set of permissions:
       For example, do not start a container as below:
       docker run --interactive --tty --device=/dev/tty0:/dev/tty0:rwm --
@@ -1338,7 +1338,7 @@ groups:
       - flag: "seccomp:unconfined"
         set: false
     remediation: |
-      By default, seccomp profiles are enabled. You do not need to do anything unless you want
+      By default, seccomp profiles are enabled.\nYou do not need to do anything unless you want
       to modify and use the modified seccomp profile.
     scored: true
 
@@ -1397,8 +1397,8 @@ groups:
     type: manual
     remediation: |
       Use proper version pinning mechanisms (the latest tag which is assigned by default is still
-      vulnerable to caching attacks) to avoid extracting the cached older versions. Version
-      pinning mechanisms should be used for base images, packages, and entire images too. You
+      vulnerable to caching attacks) to avoid extracting the cached older versions.\nVersion
+      pinning mechanisms should be used for base images, packages, and entire images too.\nYou
       can customize version pinning rules as per your requirements.
     scored: false
 
@@ -1417,7 +1417,7 @@ groups:
       For example,
       docker run -it --pids-limit 100 <Image_ID>
       In the above example, the number of processes allowed to run at any given time is set to
-      100. After a limit of 100 concurrently running processes is reached, docker would restrict
+      100.\nAfter a limit of 100 concurrently running processes is reached, docker would restrict
       any new process creation.
     scored: true
 
@@ -1429,7 +1429,7 @@ groups:
       - flag: "com.docker.network.bridge.name:docker0"
         set: false
     remediation: |
-      Follow Docker documentation and setup a user-defined network. Run all the containers in
+      Follow Docker documentation and setup a user-defined network.\nRun all the containers in
       the defined network.
     scored: false
 
@@ -1482,7 +1482,7 @@ groups:
     description: "Backup container data (Not Scored)"
     type: manual
     remediation: |
-      You should follow your organization's policy for data backup. You can take backup of your
+      You should follow your organization's policy for data backup.\nYou can take backup of your
       container data volume using ' --volumes-from ' parameter as below:
             $> docker run <Run arguments> --volumes-from $INSTANCE_ID -v [host-dir]:[container-
             dir] <Container Image Name or ID> <Command>
@@ -1496,7 +1496,7 @@ groups:
     type: manual
     remediation: |
       Keep the set of the images that you actually need and establish a workflow to remove old or
-      stale images from the host. Additionally, use features such as pull-by-digest to get specific
+      stale images from the host.\nAdditionally, use features such as pull-by-digest to get specific
       images from the registry.
       Additionally, you can follow below set of steps to find out unused images on the system and
       delete them.
@@ -1508,7 +1508,7 @@ groups:
       docker images
       Step 3: Compare the list of image IDs populated from Step 1 and Step 2 and find out images
       that are currently not being instantiated.
-      Step 4: Decide if you want to keep the images that are not currently in use. If not delete
+      Step 4: Decide if you want to keep the images that are not currently in use.\nIf not delete
       them by executing below command:
       docker rmi $IMAGE_ID
     scored: false
