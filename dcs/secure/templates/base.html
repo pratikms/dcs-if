@@ -46,101 +46,9 @@
             <!-- Top Menu Items -->
             {% block sb_admin_navbar_right %}<ul class="nav navbar-right top-nav">
                 <li class="dropdown">
-                    <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu message-dropdown">
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading">
-                                            <strong>{% if user.username %}{{ user.username }}{% else %}Anonymous{% endif %}</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading">
-                                            <strong>{% if user.username %}{{ user.username }}{% else %}Anonymous{% endif %}</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading">
-                                            <strong>{% if user.username %}{{ user.username }}{% else %}Anonymous{% endif %}</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-footer">
-                            <a href="#">Read All New Messages</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu alert-dropdown">
-                        <li>
-                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">View All</a>
-                        </li>
-                    </ul>
-                </li> -->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {% if user.username %}{{ user.username }}{% else %}Anonymous{% endif %} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <!-- <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li> -->
                         <li>
                             <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                         </li>
@@ -150,46 +58,12 @@
             {% block sb_admin_sidebar %}<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <!-- <li {% if nav_active == "start" %}class="active"{% endif %}>
-                        <a href="{% url "sb_admin_start" %}"><i class="fa fa-fw fa-play"></i> Start</a>
-                    </li> -->
                     <li {% if nav_active == "dashboard" %}class="active"{% endif %}>
                         <a href="{% url "dashboard" %}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
-                    <!-- <li {% if nav_active == "charts" %}class="active"{% endif %}>
-                        <a href="{% url "sb_admin_charts" %}"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
-                    </li> -->
-                    <li {% if nav_active == "hosts" %}class="active"{% endif %}>
-                        <a href="{% url "hosts" %}"><i class="fa fa-fw fa-bars"></i> Hosts</a>
+                    <li {% if nav_active == "images" %}class="active"{% endif %}>
+                        <a href="{% url "images" %}"><i class="fa fa-fw fa-bars"></i> Images</a>
                     </li>
-                    <!-- <li {% if nav_active == "forms" %}class="active"{% endif %}>
-                        <a href="{% url "sb_admin_forms" %}"><i class="fa fa-fw fa-edit"></i> Forms</a>
-                    </li> -->
-                    <!-- <li {% if nav_active == "bootstrap_elements" %}class="active"{% endif %}>
-                        <a href="{% url "sb_admin_bootstrap_elements" %}"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
-                    </li>
-                    <li {% if nav_active == "bootstrap_grid" %}class="active"{% endif %}>
-                        <a href="{% url "sb_admin_bootstrap_grid" %}""><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li {% if nav_active == "rtl_dashboard" %}class="active"{% endif %}>
-                        <a href="{% url "sb_admin_rtl_dashboard" %}"><i class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a>
-                    </li>
-                    <li {% if nav_active == "blank" %}class="active"{% endif %}>
-                        <a href="{% url "sb_admin_blank" %}"><i class="fa fa-fw fa-file"></i> Blank</a>
-                    </li> -->
-
                 </ul>
             </div>{% endblock sb_admin_sidebar %}
             <!-- /.navbar-collapse -->

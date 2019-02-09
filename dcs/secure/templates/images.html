@@ -2,11 +2,11 @@
 {% block sb_admin_custom_css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 {% endblock sb_admin_custom_css %}
-{% block sb_admin_title %}Hosts{% endblock sb_admin_title %}{% block sb_admin_subheading %}{% endblock sb_admin_subheading %}
+{% block sb_admin_title %}Images{% endblock sb_admin_title %}{% block sb_admin_subheading %}{% endblock sb_admin_subheading %}
 {% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
  {% block sb_admin_breadcrumb_active %}
  <li class="active">
-      <i class="fa fa-bars""></i> Hosts
+      <i class="fa fa-bars""></i> Images
  </li>
  {% endblock sb_admin_breadcrumb_active %}
  {% block sb_admin_content %}  
@@ -17,27 +17,35 @@
             <table class="table table-hover table-striped" id='hosts'>
                 <thead>
                     <tr>
-                        <th>Page</th>
-                        <th>Visits</th>
-                        <th>% New Visits</th>
-                        <th>Revenue</th>
+                        <th>Repository</th>
+                        <th>Tag</th>
+                        <th>Image ID</th>
+                        <th>Size</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for name in files %}
+                    {% for arr in data %}
                         <tr>
-                            <td>{{ name }}</td>
-                            <td>12</td>
-                            <td>12%</td>
-                            <td>$12</td>
+                            {% for elem in arr %}
+                                <td>{{elem}}</td>
+                            {% endfor %}
                             <td>
-                                <button type="button" title='Vulnerability scan' data-name={{ name }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
-                                <button type="button" title='Compliance check' data-name={{ name }} class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
+                                <button type="button" title='Vulnerability scan' data-something={{ arr.0 }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
+                                <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
                             </td>                                    
                         </tr>
                     {% endfor %}        
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Repository</th>
+                        <th>Tag</th>
+                        <th>Image ID</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
