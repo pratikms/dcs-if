@@ -14,7 +14,7 @@ def index(request):
 def dashboard(request):
     total_number_of_images = total_images()
     total_number_of_containers = total_containers()
-    return render(request, 'dashboard.html', { 'total_images': total_number_of_images, 'total_containers': total_containers, 'nav_active': 'dashboard' })
+    return render(request, 'dashboard.html', { 'total_images': total_number_of_images, 'total_containers': total_number_of_containers, 'nav_active': 'dashboard' })
 
 def images(request):
     command = "docker image list --format 'table {{.Repository}},{{.Tag}},{{.ID}},{{.Size}}'"
@@ -50,7 +50,7 @@ def compcheck(request):
         try:
             results = {}
             mydict = (yaml.load(stream))
-            command_list = []
+            # command_list = []
             for group in (mydict['groups']):
                 group_description = group['description']
                 results[group_description] = []
@@ -58,13 +58,13 @@ def compcheck(request):
                     result_dict = {}
                     if 'audit' in check.keys() and 'tests' in check.keys():
                         result_dict[check['id']] = [] 
-                        logger.error(check['id'])
-                        logger.error(check['description'])
+                        # logger.error(check['id'])
                         temp = {}
                         temp['description'] = check['description']
                         #result_dict[check['id']].append({'description':check['description']})
                         logger.error("command = " + check['audit'])
-                        flag = check['tests']['test_items'][0]['flag']
+                        logger.error(check['remediation'])
+                        temp['Remediation'] = check['remediation']
                         test_items = check['tests']['test_items'][0]
                         if 'compare' in test_items.keys():
                             compare_dict = check['tests']['test_items'][0]['compare']
@@ -118,6 +118,7 @@ def compcheck(request):
             return render(request, 'compliance.html', { 'total': total, 'score':count,'results':compresults })
         except yaml.YAMLError as exc:
             logger.error(exc)
+
 def total_images():
     images_command = 'docker image list'
     total_images_command = 'wc -l'
