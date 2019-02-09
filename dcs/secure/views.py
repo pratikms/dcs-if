@@ -17,7 +17,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', { 'total_images': total_number_of_images, 'total_containers': total_number_of_containers, 'nav_active': 'dashboard' })
 
 def images(request):
-    command = "docker image list --format 'table {{.Repository}},{{.Tag}},{{.ID}},{{.Size}}'"
+    command = "docker image list --format 'table {{.Repository}},{{.Tag}},{{.ID}},{{.CreatedAt}},{{.Size}}'"
     image_list = subprocess.check_output(command, shell=True).decode('utf8').splitlines()
     data = [d.split(",") for d in image_list[1:]]
     # image_dict = {i:v.split(",") for i, v in enumerate(image_list[1:])}
