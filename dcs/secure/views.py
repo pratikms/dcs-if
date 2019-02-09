@@ -119,18 +119,18 @@ def compcheck(request):
         except yaml.YAMLError as exc:
             logger.error(exc)
 
+def get_total(identifier):
+    command = 'docker ' + identifier + ' list'
+    wc_command = 'wc -l'
+    command_op = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    wc_command_op = subprocess.check_output(wc_command, shell=True, stdin=command_op.stdout)
+    total = int(wc_command_op) - 1
+    return total
+
 def total_images():
-    images_command = 'docker image list'
-    total_images_command = 'wc -l'
-    images_command_op = subprocess.Popen(images_command, shell=True, stdout=subprocess.PIPE)
-    total_images_command_op = subprocess.check_output(total_images_command, shell=True, stdin=images_command_op.stdout)
-    total_images = int(total_images_command_op) - 1
+    total_images = get_total('image')
     return total_images
 
 def total_containers():
-    containers_command = 'docker container list'
-    total_containers_command = 'wc -l'
-    containers_command_op = subprocess.Popen(containers_command, shell=True, stdout=subprocess.PIPE)
-    total_containers_command_op = subprocess.check_output(total_containers_command, shell=True, stdin=containers_command_op.stdout)
-    total_containers = int(total_containers_command_op) - 1
+    total_containers = get_total('container')
     return total_containers
