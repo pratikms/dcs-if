@@ -1,44 +1,136 @@
 {% extends "base.html" %}{% load static %}
 {% block sb_admin_custom_css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<style>
+.panel-heading {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.huge {
+    font-size: 20px;
+}
+</style>
 {% endblock sb_admin_custom_css %}
-{% block sb_admin_title %}Vulscan Results {% endblock sb_admin_title %}{% block sb_admin_subheading %}<small> for {{ image_name}}</small>{% endblock sb_admin_subheading %}
+{% block sb_admin_title %}Container Vulnerability Scan {% endblock sb_admin_title %}{% block sb_admin_subheading %}<small> {{ cont_name }}</small>{% endblock sb_admin_subheading %}
 {% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
 {% block sb_admin_breadcrumb_active %}<li class="active">
-      <i class="fa fa-file""></i> Vulscan Results
+      <i class="fa fa-inbox""></i> Container Vulnerability Scan
  </li>{% endblock sb_admin_breadcrumb_active %}
 {% block sb_admin_content %}
-
+<div class="row">
+    <div class="col-lg-6 col-md-6">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-bug fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='total-vulnerabilities'>Loading...</div>
+                        <div>Total Vulnerabilities</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="col-lg-6 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-folder-open fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='total-packages'>Loading...</div>
+                        <div>Total Packages</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-times fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='cvss-critical'>Loading...</div>
+                        <div>Critical</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-plus fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='cvss-high'>Loading...</div>
+                        <div>High</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-minus fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='cvss-moderate'>Loading...</div>
+                        <div>Moderate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-check fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='cvss-low'>Loading...</div>
+                        <div>Low</div>
+                    </div> 
+                </div>
+            </div>
+        </div> 
+    </div>    
+</div>        
 <div class="row">
     <div class="col-lg-12">
-        <h2>Total number of packages installed in container {{ cont_name }}</h2>
-        <!-- <p>{{ cont_scan_results }}</p> -->
+        <h2>Vulnerable Packages </h2>
         <span id='container-id' class='hide'>{{ cont_id }}</span>
         <span id='container-name' class='hide'>{{ cont_name }}</span>
         <div class="table-responsive">
             <table class="table table-hover table-striped" id='vul-container'>
                 <thead>
                     <tr>
+                        <th>PACKAGE NAME</th>
                         <th>ID</th>
                         <th>TITLE</th>
                         <th>CVSS SCORE</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- {% for arr in data %}
-                        <tr>
-                            {% for elem in arr %}
-                                <td>{{elem}}</td>
-                            {% endfor %}
-                            <td>
-                                <button type="button" title='Vulnerability scan' data-image={{ arr.2 }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
-                                <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
-                            </td>                                    
-                        </tr>
-                    {% endfor %}         -->
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th>PACKAGE NAME</th>
                         <th>ID</th>
                         <th>TITLE</th>
                         <th>CVSS SCORE</th>
@@ -60,19 +152,68 @@
 
         var containerID = $('#container-id').text();
         var containerName = $('#container-name').text();
+        var lowVul = 0;
+        var moderateVul = 0;
+        var highVul = 0;
+        var criticalVul = 0;
 
         $('#vul-container').DataTable({
             ajax: {
                 url: '../../../containers/' + containerID + '/' + containerName,
                 dataSrc: function (data) {
+                    $('#total-vulnerabilities').text(data[0]['data'].length);
+                    $('#total-packages').text(data[0]['total_packages']);
                     return data[0]['data'];
                 }
             },
             columns: [
+                { 'data': 'package_name' },
                 { 'data': 'id' },
                 { 'data': 'title' },
-                { 'data': 'cvss_score' },
-            ]
+                {
+                    'data': 'cvss_score',
+                    'render': function (data, type, row) {
+                        // console.log(typeof(data));
+                        // console.log(type);
+                        console.log('CVSSS: ' + data);
+                        if (parseFloat(data) >= 0 && parseFloat(data) <= 2) {
+                            lowVul++;
+                        } else if (parseFloat(data) > 2 && parseFloat(data) <= 5) {
+                            moderateVul++;
+                        } else if (parseFloat(data) > 5 && parseFloat(data) <= 8) {
+                            // console.log('For value: ' + parseInt(data))
+                            // console.log('Cond1: ' + (6 <= parseInt(data)))
+                            // console.log('Cond2: ' + (parseInt(data) <= 8))
+                            // if (parseInt(data) == parseInt(6.4)) {
+                                // console.log('This is 6.4: ' + parseInt(data));
+                                console.log('HIGH CVSS: ' + data);
+                                highVul++;
+                            // }
+                        } else {
+                            criticalVul++;
+                        }
+                        // console.log(highVul);
+                        $('#cvss-low').text(lowVul);
+                        $('#cvss-moderate').text(moderateVul);
+                        $('#cvss-high').text(highVul);
+                        $('#cvss-critical').text(criticalVul);
+                        return data;
+                    }
+                },
+            ],
+            createdRow: function (row, data, index) {
+                var className = '';
+                if (0 <= data.cvss_score && data.cvss_score <= 2) {
+                    className = 'info';
+                } else if (3 <= data.cvss_score && data.cvss_score <= 5) {
+                    className = 'warning';
+                } else if (6 <= data.cvss_score && data.cvss_score <= 8) {
+                    className = 'success';
+                } else {
+                    className = 'danger';
+                }
+                $(row).addClass(className);
+            }
         });
 
     });

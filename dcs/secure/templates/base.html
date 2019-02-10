@@ -64,6 +64,12 @@
                     <li {% if nav_active == "images" %}class="active"{% endif %}>
                         <a href="{% url "images" %}"><i class="fa fa-fw fa-bars"></i> Images</a>
                     </li>
+                    <li {% if nav_active == "compliance_check" %}class="active"{% endif %}>
+                        <a href="{% url "compliance_check" %}"><i class="fa fa-fw fa-chain-broken"></i> Compliance</a>
+                    </li>
+                    <li {% if nav_active == "containers" %}class="active"{% endif %}>
+                        <a href="{% url "containers" %}"><i class="fa fa-fw fa-inbox"></i> Containers</a>
+                    </li>
                 </ul>
             </div>{% endblock sb_admin_sidebar %}
             <!-- /.navbar-collapse -->

@@ -22,7 +22,9 @@ def index(request):
 def dashboard(request):
     total_number_of_images = total_images()
     total_number_of_containers = total_containers()
-    return render(request, 'dashboard.html', { 'total_images': total_number_of_images, 'total_containers': total_number_of_containers, 'nav_active': 'dashboard' })
+    total_compliance_score = compliance_score()
+    logger.error(total_number_of_containers)
+    return render(request, 'dashboard.html', { 'total_images': total_number_of_images, 'total_containers': total_number_of_containers, 'total_compliance_score': total_compliance_score, 'nav_active': 'dashboard' })
 
 def images(request):
     command = "docker image list --format 'table {{.Repository}},{{.Tag}},{{.ID}},{{.CreatedAt}},{{.Size}}'"
@@ -58,7 +60,7 @@ def containers(request):
     # image_dict = {i:v.split(",") for i, v in enumerate(image_list[1:])}
     logger.error(data[0])
     # return JsonResponse({'data': image_dict})
-    return render(request, 'containers.html', { 'data': data, 'nav_active': 'images' })
+    return render(request, 'containers.html', { 'data': data, 'nav_active': 'containers' })
 
 def compcheck(request):
     count = 0 
@@ -132,7 +134,7 @@ def compcheck(request):
                 compresults[k] = mylist                                    
             logger.error("\n\n")
             logger.error("Total:{} \tScore: {}".format(total, count))
-            return render(request, 'compliance.html', { 'total': total, 'score':count,'results':compresults })
+            return render(request, 'compliance.html', { 'total': total, 'score':count,'results':compresults, 'nav_active': 'compliance_check' })
         except yaml.YAMLError as exc:
             logger.error(exc)
 
@@ -184,7 +186,7 @@ def vulscan_images(request, img_id='',img_name=''):
         return HttpResponse("cannot save image, failed failed failed")
 
 def vulscan_containers_view(request, cont_id='', cont_name=''):
-    return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_id': cont_id })
+    return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_id': cont_id, 'nav_active': 'containers' })
 
 def vulscan_containers(request, cont_id='', cont_name=''):
     scannerInstance = scanner.scannerEngine()
@@ -192,3 +194,79 @@ def vulscan_containers(request, cont_id='', cont_name=''):
     # logger.error(json.dumps(cont_scan_results))
     return JsonResponse(cont_scan_results, safe=False)
     # return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_scan_results': cont_scan_results })
+
+def compliance_score():
+    count = 0 
+    import yaml
+    with open("definitions.yaml", 'r') as stream:
+        try:
+            results = {}
+            mydict = (yaml.load(stream))
+            # command_list = []
+            for group in (mydict['groups']):
+                group_description = group['description']
+                results[group_description] = []
+                for check in group['checks']: 
+                    result_dict = {}
+                    if 'audit' in check.keys() and 'tests' in check.keys():
+                        result_dict[check['id']] = [] 
+                        # logger.error(check['id'])
+                        temp = {}
+                        temp['description'] = check['description']
+                        #result_dict[check['id']].append({'description':check['description']})
+                        logger.error("command = " + check['audit'])
+                        logger.error(check['remediation'])
+                        temp['Remediation'] = check['remediation']
+                        test_items = check['tests']['test_items'][0]
+                        if 'compare' in test_items.keys():
+                            compare_dict = check['tests']['test_items'][0]['compare']
+                            logger.error (compare_dict)
+                            if compare_dict is not None and 'op' in compare_dict.keys() :
+                                op = compare_dict['op']
+                                value = str(compare_dict['value'])
+                                output_str = get_output(check['audit'])    
+                                if op == 'has':
+                                    if output_str is not None and value in output_str:
+                                        #result_dict['status'] = 'PASS'
+                                        temp['status'] = 'PASS'
+                                        #result_dict[check['id']].append({'status':'PASS'})
+                                    else:
+                                        temp['status'] = 'FAIL'
+                                        #result_dict[check['id']].append({'status':'FAIL'})
+                                elif op == "eq":
+                                    if output_str is not None and str(value).lower() == str(output_str).lower():
+                                        temp['status'] = 'PASS'
+                                        #result_dict[check['id']].append({'status':'PASS'})
+                                    else: 
+                                        temp['status'] = 'FAIL'
+                                        #result_dict[check['id']].append({'status':'FAIL'})
+                                result_dict[check['id']].append(temp)
+                                results[group_description].append(result_dict)
+                        else:
+                            output_str = get_output(check['audit'])
+                        if output_str is not None:
+                            logger.error (output_str)
+                        else:
+                            logger.error('skipped '+ str(check['id']))
+            logger.error("\n\n")
+            compresults = {}
+            total = 0
+            for k, values in results.items():
+                logger.error (k)
+                mylist = []
+                for v in values:
+                    for key, value in v.items():
+                        logger.error (key)
+                        for elmnts in value:
+                            logger.error (elmnts)
+                            mylist.append(elmnts)
+                            for x,y in elmnts.items():
+                                total+=1
+                                if x == 'status' and y == 'PASS':
+                                    count +=1
+                compresults[k] = mylist                                    
+            logger.error("\n\n")
+            logger.error("Total:{} \tScore: {}".format(total, count))
+            return { 'total': total, 'score':count}
+        except yaml.YAMLError as exc:
+            logger.error(exc)
