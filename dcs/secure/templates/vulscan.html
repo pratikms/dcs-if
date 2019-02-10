@@ -1,0 +1,52 @@
+{% extends "base.html" %}{% load static %}{% block sb_admin_title %}Vulscan Results {% endblock sb_admin_title %}
+{% block sb_admin_subheading %}<small> for {{ image_name}}</small>{% endblock sb_admin_subheading %}
+{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
+{% block sb_admin_breadcrumb_active %}<li class="active">
+      <i class="fa fa-file""></i> Vulscan Results
+ </li>{% endblock sb_admin_breadcrumb_active %}
+{% block sb_admin_content %}
+
+<div class="row">
+       <div class="col-lg-12">
+          <h2>Total number of packages installed in image {{ image_name}} : {{ total_packages }} </h2>
+          <!--div class="table-responsive">
+              <table class="table table-hover table-striped" id='hosts'>
+                  <thead>
+                      <tr>
+                          <th>Repository</th>
+                          <th>Tag</th>
+                          <th>Image ID</th>
+                          <th>Size</th>
+                          <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for arr in data %}
+                          <tr>
+                              {% for elem in arr %}
+                                  <td>{{elem}}</td>
+                              {% endfor %}
+                              <td>
+                                  <button type="button" title='Vulnerability scan' data-image={{ arr.2 }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
+                                  <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
+                              </td>                                    
+                          </tr>
+                      {% endfor %}        
+                  </tbody>
+                  <tfoot>
+                      <tr>
+                          <th>Repository</th>
+                          <th>Tag</th>
+                          <th>Image ID</th>
+                          <th>Size</th>
+                          <th>Action</th>
+                      </tr>
+                  </tfoot>
+              </table>
+          </div>
+      </div-->
+  </div>
+  
+
+
+{% endblock sb_admin_content %}

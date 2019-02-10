@@ -1,0 +1,81 @@
+{% extends "base.html" %}{% load static %}
+{% block sb_admin_custom_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+{% endblock sb_admin_custom_css %}
+{% block sb_admin_title %}Vulscan Results {% endblock sb_admin_title %}{% block sb_admin_subheading %}<small> for {{ image_name}}</small>{% endblock sb_admin_subheading %}
+{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
+{% block sb_admin_breadcrumb_active %}<li class="active">
+      <i class="fa fa-file""></i> Vulscan Results
+ </li>{% endblock sb_admin_breadcrumb_active %}
+{% block sb_admin_content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2>Total number of packages installed in container {{ cont_name }}</h2>
+        <!-- <p>{{ cont_scan_results }}</p> -->
+        <span id='container-id' class='hide'>{{ cont_id }}</span>
+        <span id='container-name' class='hide'>{{ cont_name }}</span>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" id='vul-container'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>TITLE</th>
+                        <th>CVSS SCORE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- {% for arr in data %}
+                        <tr>
+                            {% for elem in arr %}
+                                <td>{{elem}}</td>
+                            {% endfor %}
+                            <td>
+                                <button type="button" title='Vulnerability scan' data-image={{ arr.2 }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
+                                <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
+                            </td>                                    
+                        </tr>
+                    {% endfor %}         -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>TITLE</th>
+                        <th>CVSS SCORE</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+  
+
+
+{% endblock sb_admin_content %}
+{% block sb_admin_custom_js %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        var containerID = $('#container-id').text();
+        var containerName = $('#container-name').text();
+
+        $('#vul-container').DataTable({
+            ajax: {
+                url: '../../../containers/' + containerID + '/' + containerName,
+                dataSrc: function (data) {
+                    return data[0]['data'];
+                }
+            },
+            columns: [
+                { 'data': 'id' },
+                { 'data': 'title' },
+                { 'data': 'cvss_score' },
+            ]
+        });
+
+    });
+
+</script>
+{% endblock sb_admin_custom_js %}
