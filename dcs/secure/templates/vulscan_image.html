@@ -11,10 +11,11 @@
 }
 </style>
 {% endblock sb_admin_custom_css %}
-{% block sb_admin_title %}Container Vulnerability Scan {% endblock sb_admin_title %}{% block sb_admin_subheading %}<small> {{ cont_name }}</small>{% endblock sb_admin_subheading %}
+{% block sb_admin_title %}Image Vulnerability Scan {% endblock sb_admin_title %}
+{% block sb_admin_subheading %}<small> for {{ image_name}}</small>{% endblock sb_admin_subheading %}
 {% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
 {% block sb_admin_breadcrumb_active %}<li class="active">
-      <i class="fa fa-inbox""></i> Container Vulnerability Scan
+      <i class="fa fa-file""></i> Image Vulnerability Scan
  </li>{% endblock sb_admin_breadcrumb_active %}
 {% block sb_admin_content %}
 <div class="row">
@@ -111,13 +112,14 @@
         </div> 
     </div>    
 </div>        
+    
 <div class="row">
     <div class="col-lg-12">
-        <h2>Vulnerable Packages </h2>
-        <span id='container-id' class='hide'>{{ cont_id }}</span>
-        <span id='container-name' class='hide'>{{ cont_name }}</span>
+        <h2>Vulnerable Images</h2>
+        <span id='image-id' class='hide'>{{ img_id }}</span>
+        <span id='image-name' class='hide'>{{ img_name }}</span>
         <div class="table-responsive">
-            <table class="table table-hover table-striped" id='vul-container'>
+            <table class="table table-hover table-striped" id='vul-image'>
                 <thead>
                     <tr>
                         <th>PACKAGE NAME</th>
@@ -150,16 +152,16 @@
 
     $(document).ready(function () {
 
-        var containerID = $('#container-id').text();
-        var containerName = $('#container-name').text();
+        var imageID = $('#image-id').text();
+        var imageName = $('#image-name').text();
         var lowVul = 0;
         var moderateVul = 0;
         var highVul = 0;
         var criticalVul = 0;
 
-        var vulContainersDataTable = $('#vul-container').DataTable({
+        var vulImageDataTable = $('#vul-image').DataTable({
             ajax: {
-                url: '../../../containers/' + containerID + '/' + containerName,
+                url: '../../../images/' + imageID,
                 dataSrc: function (data) {
                     $('#total-vulnerabilities').text(data[0]['data'].length);
                     $('#total-packages').text(data[0]['total_packages']);
@@ -190,7 +192,7 @@
             }
         });
 
-	    vulContainersDataTable.rows().every(function (rowIndex, tableLoop, rowLoop) {
+	    vulImageDataTable.rows().every(function (rowIndex, tableLoop, rowLoop) {
             var data = this.data();
             var cvssScore = data.cvss_score;
             if (0 <= cvssScore && cvssScore <= 2) {
@@ -212,3 +214,4 @@
 
 </script>
 {% endblock sb_admin_custom_js %}
+

@@ -186,7 +186,10 @@ def vulscan_images(request, img_id='',img_name=''):
         return HttpResponse("cannot save image, failed failed failed")
 
 def vulscan_containers_view(request, cont_id='', cont_name=''):
-    return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_id': cont_id, 'nav_active': 'containers' })
+    return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_id': cont_id })
+
+def vulscan_images_view(request, image_id='', image_name=''):
+    return render(request, 'vulscan_image.html', { 'img_id': image_id, 'img_name': image_name })
 
 def vulscan_containers(request, cont_id='', cont_name=''):
     scannerInstance = scanner.scannerEngine()
@@ -194,6 +197,7 @@ def vulscan_containers(request, cont_id='', cont_name=''):
     # logger.error(json.dumps(cont_scan_results))
     return JsonResponse(cont_scan_results, safe=False)
     # return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_scan_results': cont_scan_results })
+
 
 def compliance_score():
     count = 0 
@@ -270,3 +274,29 @@ def compliance_score():
             return { 'total': total, 'score':count}
         except yaml.YAMLError as exc:
             logger.error(exc)
+
+
+def image_vulscan(request, img_id=''):
+    import random
+    docker_nm = "container_" + str(random.randint(1,101))
+    command = "docker run -it --name=" + docker_nm + " -d "+ str(img_id)
+    logger.error("Running command : " + command)
+    proc = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output = proc.stdout.read()
+    cmd_cntnr_id = "docker ps -aqf \"name=" + docker_nm.strip() + '"'
+    running_cntnr_id = subprocess.check_output(cmd_cntnr_id, shell=True).decode('utf8').splitlines()[0]
+    scannerInstance = scanner.scannerEngine()
+    image_scan_results = scannerInstance.scan(dockerID=running_cntnr_id, dockerImage=docker_nm, checkDocker=True)
+    logger.error(image_scan_results)
+    # error = proc.stderr.read()
+    command = "docker kill " + docker_nm 
+    proc = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    kill_output = proc.stdout.read()
+    logger.error ('Before o/p')
+    if output:
+        logger.error (output)
+        # return HttpResponse(output)
+        #return str(output.decode('utf-8').rstrip())
+        return JsonResponse(image_scan_results, safe=False)
+        #return render(request, 'vulscan_images.html', { 'data': image_scan_results })
+    logger.error ('After o/p')

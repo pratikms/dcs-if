@@ -105,15 +105,15 @@ class scannerEngine():
                             temp['id'] = vulns
                             temp['title'] = allVulnsInfo['data']['documents'][vulns]['title']
                             temp['cvss_score'] = allVulnsInfo['data']['documents'][vulns]['cvss']['score']
-                            if temp not in audit_system_results['data']:
+                            print(temp)
+                            print("\n\n\n")
+                            if temp not in audit_system_results['data'] and temp['cvss_score'] != 0.0 :
                                 audit_system_results['data'].append(temp)
                         else:
                             packageVulns.append((vulns,0))
-                            
                     packageVulns = sorted(packageVulns, key=lambda x:x[1])
                     packageVulns = [" "*8 + x[0] for x in packageVulns]
                     print("\n".join(packageVulns))
-                    print ("\n\n")
         return audit_system_results
         # return instance
 
@@ -123,17 +123,14 @@ class scannerEngine():
         return results
 
     def scan(self, dockerID = False, dockerImage = False, checkDocker = False):
-        container_results = [] 
+        container_results = []
         #scan host machine
         # hostInstance = self.auditSystem(sshPrefix=None,systemInfo="Host machine")
         #scan dockers
         hostInstance = self.getInstance(sshPrefix=None)
         if checkDocker:
             if dockerID and dockerImage:
-                scandocker_retval = self.scanDocker(dockerID, dockerImage)
-                print(scandocker_retval)
-                if scandocker_retval not in container_results:
-                    container_results.append(scandocker_retval)
+                container_results.append(self.scanDocker(dockerID, dockerImage))
             else:
                 containers = hostInstance.sshCommand("docker ps")
                 if containers:
@@ -141,7 +138,6 @@ class scannerEngine():
                     dockers = [(line.split()[0], line.split()[1]) for line in containers]
                     for (dockerID, dockerImage) in dockers:
                         container_results.append(self.scanDocker(dockerID, dockerImage))
-                    print(len(container_results))
 
         return container_results
 

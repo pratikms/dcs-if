@@ -14,7 +14,7 @@
     <div class="col-lg-12">
         <h2>Images Installed Locally</h2>
         <div class="table-responsive">
-            <table class="table table-hover table-striped" id='hosts'>
+            <table class="table table-hover table-striped" id='images'>
                 <thead>
                     <tr>
                         <th>Repository</th>
@@ -32,7 +32,7 @@
                                 <td>{{elem}}</td>
                             {% endfor %}
                             <td>
-                                <button type="button" title='Vulnerability scan' data-something={{ arr.0 }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
+                                <button type="button" title='Vulnerability scan' data-image-name={{ arr.0 }} data-image-id={{ arr.2 }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
                                 <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
                             </td>                                    
                         </tr>
@@ -59,54 +59,41 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 
-    function perform(action, name) {
-        var div = $('<div/>')
-            .addClass( 'loading' )
-            .text( 'Loading...' );
-        setTimeout(function () {
-            output = '';
-            $.ajax({
-                url: '../perform/' + action + '/' + name,
-                dataType: 'json',
-                async: false,
-                success: function (data) {
-                    // console.log(data);
-                    var output = '<table>';
-                    $.each(data, function (k, v) {
-                        output += '<tr>';
-                        output += '<td>' + k + '</td>';
-                        output += '<td>' + v + '</td>';
-                        output += '</tr>';
-                    })
-                    output += '</table>'
-                    div.html(output).removeClass('loading');
-                }
-            });
-        }, 1500);
-        return div;
-    }
+    // function perform(action, name) {
+    //     var div = $('<div/>')
+    //         .addClass( 'loading' )
+    //         .text( 'Loading...' );
+    //     setTimeout(function () {
+    //         output = '';
+    //         $.ajax({
+    //             url: '../perform/' + action + '/' + name,
+    //             dataType: 'json',
+    //             async: false,
+    //             success: function (data) {
+    //                 // console.log(data);
+    //                 var output = '<table>';
+    //                 $.each(data, function (k, v) {
+    //                     output += '<tr>';
+    //                     output += '<td>' + k + '</td>';
+    //                     output += '<td>' + v + '</td>';
+    //                     output += '</tr>';
+    //                 })
+    //                 output += '</table>'
+    //                 div.html(output).removeClass('loading');
+    //             }
+    //         });
+    //     }, 1500);
+    //     return div;
+    // }
 
     $(document).ready(function() {
-        
-        var hosts = $('#hosts').DataTable();
 
-        $('#hosts tbody').on('click', 'td button.action-button', function () {
-            // alert($(this).text() + ' clicked');
-            var action = $(this).attr('title');
-            var name = $(this).data('name');
-            var tr = $(this).closest('tr');
-            var row = hosts.row( tr );
-    
-            if ( row.child.isShown() ) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                row.child( perform(action, name) ).show();
-                tr.addClass('shown');
-            }
+        var images = $('#images').DataTable();
+
+        $('#images tbody').on('click', 'td button.action-button', function () {
+            var image_id = $(this).data('image-id')
+            var image_name = $(this).data('image-name')
+            window.location.replace('../images/view/' + image_id + '/' + image_name);
         });
 
     });
