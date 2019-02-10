@@ -12,7 +12,7 @@
 </style>
 {% endblock sb_admin_custom_css %}
 {% block sb_admin_title %}Image Vulnerability Scan {% endblock sb_admin_title %}
-{% block sb_admin_subheading %}<small> for {{ image_name}}</small>{% endblock sb_admin_subheading %}
+{% block sb_admin_subheading %}<small> {{ img_name}} </small>{% endblock sb_admin_subheading %}
 {% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
 {% block sb_admin_breadcrumb_active %}<li class="active">
       <i class="fa fa-file""></i> Image Vulnerability Scan
@@ -153,7 +153,7 @@
     $(document).ready(function () {
 
         var imageID = $('#image-id').text();
-        var imageName = $('#image-name').text();
+        var imageName = $('#image-name').text().replace('/', '_');
         var lowVul = 0;
         var moderateVul = 0;
         var highVul = 0;

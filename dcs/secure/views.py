@@ -277,8 +277,8 @@ def compliance_score():
 
 
 def image_vulscan(request, img_id=''):
-    import random
-    docker_nm = "container_" + str(random.randint(1,101))
+    import time
+    docker_nm = "container_" + str(time.time())
     command = "docker run -it --name=" + docker_nm + " -d "+ str(img_id)
     logger.error("Running command : " + command)
     proc = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -289,7 +289,7 @@ def image_vulscan(request, img_id=''):
     image_scan_results = scannerInstance.scan(dockerID=running_cntnr_id, dockerImage=docker_nm, checkDocker=True)
     logger.error(image_scan_results)
     # error = proc.stderr.read()
-    command = "docker kill " + docker_nm 
+    command = "docker rm -f " + docker_nm 
     proc = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     kill_output = proc.stdout.read()
     logger.error ('Before o/p')
