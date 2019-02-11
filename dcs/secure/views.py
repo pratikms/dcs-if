@@ -54,7 +54,7 @@ def get_output(command):
     return None
 
 def containers(request):
-    command = "docker container list --format 'table {{.ID}},{{.Image}},{{.Status}},{{.Command}},{{.CreatedAt}},{{.Names}},{{.Labels}}'"
+    command = "docker container list --format 'table {{.ID}},{{.Image}},{{.Status}},{{.Command}},{{.CreatedAt}},{{.Names}}'"
     container_list = subprocess.check_output(command, shell=True).decode('utf8').splitlines()
     data = [d.split(",") for d in container_list[1:]]
     # image_dict = {i:v.split(",") for i, v in enumerate(image_list[1:])}
@@ -181,15 +181,15 @@ def vulscan_images(request, img_id='',img_name=''):
             cpe_results = vulners_api.cpeVulnerabilities('"'+'cpe:/a:'+pkg['Package'].lower()+':debian:'+ pkg['Version'] +'"')
             logger.error(cpe_results)
 
-        return render(request, 'vulscan.html', { 'data': package_list, 'total_packages':total_packages , 'image_name':image_name})
+        return render(request, 'vulscan.html', { 'data': package_list, 'total_packages':total_packages , 'image_name':image_name, 'nav_active': 'images' })
     else:
         return HttpResponse("cannot save image, failed failed failed")
 
 def vulscan_containers_view(request, cont_id='', cont_name=''):
-    return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_id': cont_id })
+    return render(request, 'vulscan_container.html', { 'cont_name': cont_name, 'cont_id': cont_id, 'nav_active': 'containers' })
 
 def vulscan_images_view(request, image_id='', image_name=''):
-    return render(request, 'vulscan_image.html', { 'img_id': image_id, 'img_name': image_name })
+    return render(request, 'vulscan_image.html', { 'img_id': image_id, 'img_name': image_name, 'nav_active': 'images' })
 
 def vulscan_containers(request, cont_id='', cont_name=''):
     scannerInstance = scanner.scannerEngine()

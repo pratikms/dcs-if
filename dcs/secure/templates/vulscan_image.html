@@ -13,10 +13,15 @@
 {% endblock sb_admin_custom_css %}
 {% block sb_admin_title %}Image Vulnerability Scan {% endblock sb_admin_title %}
 {% block sb_admin_subheading %}<small> {{ img_name}} </small>{% endblock sb_admin_subheading %}
-{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
-{% block sb_admin_breadcrumb_active %}<li class="active">
+{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="{% url "dashboard" %}">Dashboard</a>{% endblock sb_admin_breadcrumb %}
+{% block sb_admin_breadcrumb_active %}
+<li class="active">
+        <a href="{% url "images" %}"><i class="fa fa-fw fa-bars"></i> Images</a>
+</li>
+<li class="active">
       <i class="fa fa-file""></i> Image Vulnerability Scan
- </li>{% endblock sb_admin_breadcrumb_active %}
+</li>
+{% endblock sb_admin_breadcrumb_active %}
 {% block sb_admin_content %}
 <div class="row">
     <div class="col-lg-6 col-md-6">
@@ -148,9 +153,14 @@
 {% endblock sb_admin_content %}
 {% block sb_admin_custom_js %}
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 <script>
-
+    
+    $.LoadingOverlay('show');
     $(document).ready(function () {
+        setTimeout(function () {
+            $.LoadingOverlay('hide');
+        }, 5000);
 
         var imageID = $('#image-id').text();
         var imageName = $('#image-name').text().replace('/', '_');
@@ -167,7 +177,7 @@
                     $('#total-packages').text(data[0]['total_packages']);
                     return data[0]['data'];
                 },
-		async: false
+		        async: false
             },
             columns: [
                 { 'data': 'package_name' },
@@ -179,36 +189,40 @@
             ],
             createdRow: function (row, data, index) {
                 var className = '';
-                if (0 <= data.cvss_score && data.cvss_score <= 2) {
+                if (0.1 <= data.cvss_score && data.cvss_score <= 3.9) {
                     className = 'info';
-                } else if (3 <= data.cvss_score && data.cvss_score <= 5) {
+                } else if (4.0 <= data.cvss_score && data.cvss_score <= 6.9) {
                     className = 'warning';
-                } else if (6 <= data.cvss_score && data.cvss_score <= 8) {
+                } else if (7.0 <= data.cvss_score && data.cvss_score <= 8.9) {
                     className = 'success';
-                } else {
+                } else if (9.0 <= data.cvss_score) {
                     className = 'danger';
                 }
                 $(row).addClass(className);
             }
         });
 
-	    vulImageDataTable.rows().every(function (rowIndex, tableLoop, rowLoop) {
-            var data = this.data();
-            var cvssScore = data.cvss_score;
-            if (0 <= cvssScore && cvssScore <= 2) {
-                lowVul++;
-            } else if (2 < cvssScore && cvssScore <= 5) {
-                moderateVul++;
-            } else if (5 < cvssScore && cvssScore <= 8) {
-                highVul++;
-            } else if (8 < cvssScore) {
-                criticalVul++;
-            }
-            $('#cvss-low').text(lowVul);
-            $('#cvss-moderate').text(moderateVul);
-            $('#cvss-high').text(highVul);
-            $('#cvss-critical').text(criticalVul);
-        });
+        var vulImageDataTableRows = vulImageDataTable.rows();
+        if (vulImageDataTableRows.length != 0) {
+            vulImageDataTable.rows().every(function (rowIndex, tableLoop, rowLoop) {
+                var data = this.data();
+                var cvssScore = data.cvss_score;
+                if (0.1 <= cvssScore && cvssScore <= 3.9) {
+                    lowVul++;
+                } else if (4.0 < cvssScore && cvssScore <= 6.9) {
+                    moderateVul++;
+                } else if (7.0 < cvssScore && cvssScore <= 8.9) {
+                    highVul++;
+                } else if (9.0 <= cvssScore) {
+                    criticalVul++;
+                }
+            });
+        }
+        $('#cvss-low').text(lowVul);
+        $('#cvss-moderate').text(moderateVul);
+        $('#cvss-high').text(highVul);
+        $('#cvss-critical').text(criticalVul);
+
 
     });
 

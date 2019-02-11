@@ -5,10 +5,47 @@
 {% endblock sb_admin_custom_css %}
 {% block sb_admin_title %}Compliance Check{% endblock sb_admin_title %}
 {% block sb_admin_subheading %}<small></small>{% endblock sb_admin_subheading %}
-{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Compliance Check Details</a>{% endblock sb_admin_breadcrumb %}
-{% block sb_admin_breadcrumb_active %}{% endblock sb_admin_breadcrumb_active %}
+{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="{% url "dashboard" %}">Dashboard</a>{% endblock sb_admin_breadcrumb %}
+{% block sb_admin_breadcrumb_active %}
+<li class="active">
+    <i class="fa fa-chain-broken"></i> Compliance Check
+</li>
+{% endblock sb_admin_breadcrumb_active %}
 {% block sb_admin_content %}
 <div class="row">
+    <div class="col-lg-6 col-md-6">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-chain-broken fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='score'>{{ score }}</div>
+                        <div>Compliance Score</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="col-lg-6 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-flag fa-2x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id='total'>{{ total }}</div>
+                        <div>Total Checks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+    
+<!-- <div class="row">
     <div class="col-lg-3 col-md-6">
         <div class="panel panel-red">
             <div class="panel-heading">
@@ -33,13 +70,13 @@
     </div>
 	
 	
-</div>
+</div> -->
 <div class="row">
     <div class="col-lg-12">
 		{% for result, values in results.items %}
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>{{ result }}</h3>
+                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>&nbsp;&nbsp;{{ result }}</h3>
 			</div>
             <div class="panel-body">
                 <div class="table-responsive">
@@ -85,9 +122,17 @@
 {% block sb_admin_custom_js %}
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src=" https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js "></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 <script>
 
+    $.LoadingOverlay('show');
+
     $(document).ready(function () {
+
+        setTimeout(function () {
+            $.LoadingOverlay('hide');
+        }, 3000);
+
         $('table').DataTable({
             responsive: {
                 details: {

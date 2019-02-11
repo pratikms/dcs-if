@@ -3,7 +3,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 {% endblock sb_admin_custom_css %}
 {% block sb_admin_title %}Images{% endblock sb_admin_title %}{% block sb_admin_subheading %}{% endblock sb_admin_subheading %}
-{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
+{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="{% url "dashboard" %}">Dashboard</a>{% endblock sb_admin_breadcrumb %}
  {% block sb_admin_breadcrumb_active %}
  <li class="active">
       <i class="fa fa-bars""></i> Images
@@ -17,12 +17,12 @@
             <table class="table table-hover table-striped" id='images'>
                 <thead>
                     <tr>
-                        <th>Repository</th>
-                        <th>Tag</th>
-                        <th>Image ID</th>
-                        <th>Created</th>
-                        <th>Size</th>
-                        <th>Action</th>
+                        <th>REPOSITORY</th>
+                        <th>TAG</th>
+                        <th>IMAGE ID</th>
+                        <th>CREATED</th>
+                        <th>SIZE</th>
+                        <th>ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,19 +33,19 @@
                             {% endfor %}
                             <td>
                                 <button type="button" title='Vulnerability scan' data-image-name={{ arr.0 }} data-image-id={{ arr.2 }} class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
-                                <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
+                                <!-- <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button> -->
                             </td>                                    
                         </tr>
                     {% endfor %}        
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Repository</th>
-                        <th>Tag</th>
-                        <th>Image ID</th>
-                        <th>Created</th>
-                        <th>Size</th>
-                        <th>Action</th>
+                        <th>REPOSITORY</th>
+                        <th>TAG</th>
+                        <th>IMAGE ID</th>
+                        <th>CREATED</th>
+                        <th>SIZE</th>
+                        <th>ACTION</th>
                     </tr>
                 </tfoot>
             </table>
@@ -57,19 +57,25 @@
 {% endblock sb_admin_content %}
 {% block sb_admin_custom_js %}
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 <script type="text/javascript">
-
+    
+    $.LoadingOverlay('show');
     $(document).ready(function() {
+        
+        setTimeout(function () {
+            $.LoadingOverlay('hide');
+        }, 3000);
 
         var images = $('#images').DataTable();
-
+        
         $('#images tbody').on('click', 'td button.action-button', function () {
             var image_id = $(this).data('image-id')
             var image_name = $(this).data('image-name').replace('/', '_');
             window.location.replace('../images/view/' + image_id + '/' + image_name);
         });
-
+        
     });
-
-</script>
-{% endblock sb_admin_custom_js %}
+    
+    </script>
+    {% endblock sb_admin_custom_js %}

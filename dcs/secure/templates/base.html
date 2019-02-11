@@ -61,11 +61,11 @@
                     <li {% if nav_active == "dashboard" %}class="active"{% endif %}>
                         <a href="{% url "dashboard" %}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
+                    <li {% if nav_active == "compliance_check" %}class="active"{% endif %}>
+                        <a href="{% url "compliance_check" %}"><i class="fa fa-fw fa-chain-broken"></i> Compliance Check</a>
+                    </li>
                     <li {% if nav_active == "images" %}class="active"{% endif %}>
                         <a href="{% url "images" %}"><i class="fa fa-fw fa-bars"></i> Images</a>
-                    </li>
-                    <li {% if nav_active == "compliance_check" %}class="active"{% endif %}>
-                        <a href="{% url "compliance_check" %}"><i class="fa fa-fw fa-chain-broken"></i> Compliance</a>
                     </li>
                     <li {% if nav_active == "containers" %}class="active"{% endif %}>
                         <a href="{% url "containers" %}"><i class="fa fa-fw fa-inbox"></i> Containers</a>
@@ -88,7 +88,7 @@
                         </h1>
                         <ol class="breadcrumb">
                             <li>
-                                {% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
+                                {% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="{% url "dashboard" %}">Dashboard</a>{% endblock sb_admin_breadcrumb %}
                             </li>
                             {% block sb_admin_breadcrumb_active %}
                             <li class="active">

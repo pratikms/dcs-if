@@ -3,10 +3,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 {% endblock sb_admin_custom_css %}
 {% block sb_admin_title %}Containers{% endblock sb_admin_title %}{% block sb_admin_subheading %}{% endblock sb_admin_subheading %}
-{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>{% endblock sb_admin_breadcrumb %}
+{% block sb_admin_breadcrumb %}<i class="fa fa-dashboard"></i>  <a href="{% url "dashboard" %}">Dashboard</a>{% endblock sb_admin_breadcrumb %}
  {% block sb_admin_breadcrumb_active %}
  <li class="active">
-      <i class="fa fa-inbox""></i> Containers
+    <i class="fa fa-inbox""></i> Containers
  </li>
  {% endblock sb_admin_breadcrumb_active %}
  {% block sb_admin_content %}  
@@ -23,7 +23,6 @@
                             <th>Command</th>
                             <th>Created at</th>
                             <th>Names</th>
-                            <th>Labels</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -31,11 +30,13 @@
                     {% for arr in data %}
                         <tr>
                             {% for elem in arr %}
-                                <td>{{elem}}</td>
+                                {% if elem %}
+                                    <td>{{elem}}</td>
+                                {% endif %}
                             {% endfor %}
                             <td>
                                 <button type="button" title='Vulnerability scan' data-container-id={{ arr.0 }} data-name={{ arr.5 }}  class="btn btn-danger action-button"><i class='fa fa-shield'></i></button>&nbsp;&nbsp;
-                                <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button>
+                                <!-- <button type="button" title='Compliance check' class="btn btn-info action-button"><i class='fa fa-exclamation-circle'></i></button> -->
                             </td>                                    
                         </tr>
                     {% endfor %}        
@@ -48,7 +49,6 @@
                         <th>Command</th>
                         <th>Created at</th>
                         <th>Names</th>
-                        <th>Labels</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
@@ -61,38 +61,44 @@
 {% endblock sb_admin_content %}
 {% block sb_admin_custom_js %}
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 <script type="text/javascript">
 
-    function vulScan(image) {
-        var div = $('<div/>')
-            .addClass( 'loading' )
-            .text( 'Loading...' );
-        setTimeout(function () {
-            output = '';
-            $.ajax({
-                url: '../containers/' + image,
-                dataType: 'json',
-                async: false,
-                success: function (data) {
-                    console.log(data);
-                    div.html(output).removeClass('loading');
-                }
-            });
-        }, 1500);
-        return div;
-    }
-
-    $(document).ready(function() {
-        
-        var containers = $('#containers').DataTable();
-
-        $('#containers tbody').on('click', 'td button.action-button', function () {
-            var container_id = $(this).data('container-id')
-            var container_name = $(this).data('name')
-            window.location.replace('../containers/view/' + container_id + '/' + container_name);
+function vulScan(image) {
+    var div = $('<div/>')
+    .addClass( 'loading' )
+    .text( 'Loading...' );
+    setTimeout(function () {
+        output = '';
+        $.ajax({
+            url: '../containers/' + image,
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                console.log(data);
+                div.html(output).removeClass('loading');
+            }
         });
+    }, 1500);
+    return div;
+}
 
+$.LoadingOverlay('show');
+$(document).ready(function() {
+    
+    var containers = $('#containers').DataTable();
+    
+    setTimeout(function () {
+        $.LoadingOverlay('hide');
+    }, 3000);
+
+    $('#containers tbody').on('click', 'td button.action-button', function () {
+        var container_id = $(this).data('container-id')
+        var container_name = $(this).data('name')
+        window.location.replace('../containers/view/' + container_id + '/' + container_name);
     });
+    
+});
 
 </script>
 {% endblock sb_admin_custom_js %}
